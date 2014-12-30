@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <Windows.h>
+#include <Shlwapi.h>
 #include <TlHelp32.h>
 
 typedef HINSTANCE(*fpLoadLibrary)(char*);
@@ -11,8 +12,16 @@ int wmain(int argc, wchar_t* argv[])
 	{
 		return 1;
 	}
+
 	wchar_t* library = argv[1];
 	wchar_t* process = argv[2];
+
+	if (PathIsRelative(library)) {
+		DWORD length = GetCurrentDirectory(0, NULL);
+		library = new wchar_t[length + wcslen(argv[1])];
+		GetCurrentDirectory(length, library);
+		PathAppend(library, argv[1]);
+	}
 
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
@@ -51,6 +60,6 @@ int wmain(int argc, wchar_t* argv[])
 	CreateRemoteThread(hProcess, 0, 0, (LPTHREAD_START_ROUTINE)LoadLibraryAddr, paramAddr, 0, 0);
 
 	CloseHandle(hProcess);
-
+	delete[] library;
 	return 0;
 }
