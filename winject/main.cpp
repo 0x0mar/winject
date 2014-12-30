@@ -49,7 +49,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	HANDLE hProcess;
 
-	HINSTANCE hDll = LoadLibraryA("KERNEL32");
+	HINSTANCE hDll = LoadLibrary("KERNEL32");
 
 	fpLoadLibrary LoadLibraryAddr = (fpLoadLibrary)GetProcAddress(hDll, "LoadLibraryA");
 
