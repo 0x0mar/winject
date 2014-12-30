@@ -19,7 +19,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	if (PathIsRelative(library)) {
 		DWORD length = GetCurrentDirectory(0, NULL);
-		library = new _TCHAR[length + _tcslen(argv[1], )];
+		library = new _TCHAR[length + _tcslen(argv[1])];
 		GetCurrentDirectory(length, library);
 		PathAppend(library, argv[1]);
 	}
