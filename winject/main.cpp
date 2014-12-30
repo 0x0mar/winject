@@ -5,14 +5,14 @@
 
 typedef HINSTANCE(*fpLoadLibrary)(char*);
 
-int main(int argc, char* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
 	if (argc != 3)
 	{
 		return 1;
 	}
-	char* library = argv[1];
-	char* process = argv[2];
+	wchar_t* library = argv[1];
+	wchar_t* process = argv[2];
 
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
 	do
 	{
-		if (strcmp(entry.szExeFile, process))
+		if (wcscmp(entry.szExeFile, process))
 		{
 			pid = entry.th32ProcessID;
 			break;
@@ -45,8 +45,8 @@ int main(int argc, char* argv[])
 
 	hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-	LPVOID paramAddr = VirtualAllocEx(hProcess, 0, strlen(library) + 1, MEM_COMMIT, PAGE_READWRITE);
-	bool memoryWritten = WriteProcessMemory(hProcess, paramAddr, library, strlen(library) + 1, NULL);
+	LPVOID paramAddr = VirtualAllocEx(hProcess, 0, wcslen(library) + 1, MEM_COMMIT, PAGE_READWRITE);
+	BOOL memoryWritten = WriteProcessMemory(hProcess, paramAddr, library, wcslen(library) + 1, NULL);
 
 	CreateRemoteThread(hProcess, 0, 0, (LPTHREAD_START_ROUTINE)LoadLibraryAddr, paramAddr, 0, 0);
 
